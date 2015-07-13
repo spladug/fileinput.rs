@@ -1,0 +1,11 @@
+[package]
+name = "fileinput"
+version = "0.1.0"
+authors = ["Neil Williams <neil@spladug.net>"]
+
+description = "Read input from multiple streams."
+homepage = "https://github.com/spladug/fileinput.rs"
+documentation = "https://www.spladug.net/rust/fileinput/index.html"
+repository = "https://github.com/spladug/fileinput.rs"
+readme = "README.md"
+license = "MIT"
