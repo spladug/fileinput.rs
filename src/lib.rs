@@ -23,9 +23,12 @@ use std::io::{Read,stdin};
 use std::borrow::Borrow;
 
 
-#[derive(Debug, Eq, PartialEq)]
-enum Source {
+/// A file source.
+#[derive(Debug, Eq, PartialEq, Clone)]
+pub enum Source {
+    /// Read from the process's standard in.
     Stdin,
+    /// Read from the specified file.
     File(String),
 }
 
@@ -64,19 +67,12 @@ impl FileInput {
         }
     }
 
-    /// Returns the filename of the current file being read.
+    /// Returns the current source being read from.
     ///
     /// This function will return `None` if no reading has been done yet or all the inputs have
-    /// been drained. If the current input is standard in, this will return `"<stdin>"`.
-    pub fn filename(&self) -> Option<String> {
-        if self.state.is_none() {
-            return None;
-        }
-
-        Some(match self.state.as_ref().unwrap().source {
-            Source::Stdin => "<stdin>".to_string(),
-            Source::File(ref file) => file.clone(),
-        })
+    /// been drained.
+    pub fn source(&self) -> Option<Source> {
+        self.state.as_ref().map(|s| s.source.clone())
     }
 
     fn open_next_file(&mut self) -> io::Result<()> {
@@ -179,20 +175,20 @@ mod test {
         }
 
         #[test]
-        fn get_filename() {
+        fn get_source() {
             let paths = vec!["testdata/1", "testdata/2"];
             let fileinput = FileInput::new(&paths);
             let mut reader = BufReader::new(fileinput);
             let mut buffer = String::new();
 
-            assert_eq!(reader.get_ref().filename(), None);
+            assert_eq!(reader.get_ref().source(), None);
             reader.read_line(&mut buffer).unwrap();
-            assert_eq!(reader.get_ref().filename(), Some("testdata/1".to_string()));
+            assert_eq!(reader.get_ref().source(), Some(Source::File("testdata/1".to_string())));
             reader.read_line(&mut buffer).unwrap();
-            assert_eq!(reader.get_ref().filename(), Some("testdata/2".to_string()));
+            assert_eq!(reader.get_ref().source(), Some(Source::File("testdata/2".to_string())));
             reader.read_line(&mut buffer).unwrap();
             reader.read_line(&mut buffer).unwrap();
-            assert_eq!(reader.get_ref().filename(), None);
+            assert_eq!(reader.get_ref().source(), None);
         }
 
         #[test]
