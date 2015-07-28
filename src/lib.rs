@@ -60,7 +60,7 @@ pub struct FileInput {
 
 impl FileInput {
     /// Constructs a new `FileInput` that will read from the files specified.
-    pub fn new<T>(paths: &[T]) -> FileInput where T: Borrow<str> {
+    pub fn new<T>(paths: &[T]) -> Self where T: Borrow<str> {
         FileInput {
             sources: make_source_vec(paths),
             state: None,
