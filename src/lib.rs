@@ -19,7 +19,7 @@
 //! ```
 use std::fs::File;
 use std::io;
-use std::io::{Read,stdin};
+use std::io::{Read, stdin};
 use std::borrow::Borrow;
 
 
@@ -32,7 +32,9 @@ pub enum Source {
     File(String),
 }
 
-fn make_source_vec<T>(filenames: &[T]) -> Vec<Source> where T: Borrow<str> {
+fn make_source_vec<T>(filenames: &[T]) -> Vec<Source>
+    where T: Borrow<str>
+{
     if filenames.is_empty() {
         return vec![Source::Stdin];
     }
@@ -60,7 +62,9 @@ pub struct FileInput {
 
 impl FileInput {
     /// Constructs a new `FileInput` that will read from the files specified.
-    pub fn new<T>(paths: &[T]) -> Self where T: Borrow<str> {
+    pub fn new<T>(paths: &[T]) -> Self
+        where T: Borrow<str>
+    {
         FileInput {
             sources: make_source_vec(paths),
             state: None,
@@ -117,7 +121,7 @@ impl Read for FileInput {
 #[cfg(test)]
 mod test {
     mod source_vec {
-        use super::super::{make_source_vec,Source};
+        use super::super::{make_source_vec, Source};
 
         #[test]
         fn empty_list_makes_stdin() {
@@ -144,13 +148,17 @@ mod test {
         fn mixed() {
             let names = vec!["one", "two", "-", "three"];
             let paths = make_source_vec(&names);
-            assert_eq!(paths, [Source::File("one".to_string()), Source::File("two".to_string()), Source::Stdin, Source::File("three".to_string())]);
+            assert_eq!(paths,
+                       [Source::File("one".to_string()),
+                        Source::File("two".to_string()),
+                        Source::Stdin,
+                        Source::File("three".to_string())]);
         }
     }
 
     mod fileinput {
         use super::super::*;
-        use std::io::{Read,ErrorKind,BufRead,BufReader};
+        use std::io::{Read, ErrorKind, BufRead, BufReader};
 
         #[test]
         fn read_files() {
@@ -183,9 +191,11 @@ mod test {
 
             assert_eq!(reader.get_ref().source(), None);
             reader.read_line(&mut buffer).unwrap();
-            assert_eq!(reader.get_ref().source(), Some(Source::File("testdata/1".to_string())));
+            assert_eq!(reader.get_ref().source(),
+                       Some(Source::File("testdata/1".to_string())));
             reader.read_line(&mut buffer).unwrap();
-            assert_eq!(reader.get_ref().source(), Some(Source::File("testdata/2".to_string())));
+            assert_eq!(reader.get_ref().source(),
+                       Some(Source::File("testdata/2".to_string())));
             reader.read_line(&mut buffer).unwrap();
             reader.read_line(&mut buffer).unwrap();
             assert_eq!(reader.get_ref().source(), None);

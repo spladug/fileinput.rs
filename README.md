@@ -7,7 +7,7 @@ Read from multiple input streams like a cool CLI tool should.
 ## Example
 
 ```rust
-use std::io::{BufRead,BufReader};
+use std::io::{BufRead, BufReader};
 use fileinput::FileInput;
 
 let filenames = vec!["testdata/1", "testdata/2"];
