@@ -12,7 +12,7 @@ use fileinput::FileInput;
 
 let filenames = vec!["testdata/1", "testdata/2"];
 let fileinput = FileInput::new(&filenames);
-let mut reader = BufReader::new(fileinput);
+let reader = BufReader::new(fileinput);
 
 for line in reader.lines() {
     println!("{}", line.unwrap());
